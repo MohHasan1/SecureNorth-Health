@@ -3,6 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { getPayload } from "payload";
 
 import { BehindTheScenesPanel, type DecryptResult } from "@/components/portal/BehindTheScenesPanel";
+import { PatientRecordView } from "@/components/portal/PatientRecordView";
 import type { EncryptedField } from "@/lib/crypto/encryption";
 import { getCurrentUser } from "@/lib/getCurrentUser";
 
@@ -31,9 +32,23 @@ export default async function RecordPage({
 
   if (!roleGated) notFound();
 
-  // The raw ciphertext blob is safe to show to anyone — it's meaningless
-  // without the server-side key — so this bypasses the redaction just to
-  // prove what's actually sitting in the database.
+  const decrypted = {
+    patientName: roleGated.patientName as unknown as DecryptResult,
+    dateOfBirth: roleGated.dateOfBirth as unknown as DecryptResult,
+    diagnosisNotes: roleGated.diagnosisNotes as unknown as DecryptResult,
+  };
+
+  // Nurse and provider get an ordinary patient-record view, like a real
+  // EHR. The crypto-internals breakdown (ciphertext, raw hook output, the
+  // "in transit" explanation) is admin-only — that's not something a real
+  // hospital portal would show a clinician day to day.
+  if (user.role !== "admin") {
+    return <PatientRecordView recordId={id} decrypted={decrypted} />;
+  }
+
+  // The raw ciphertext blob is safe to show — it's meaningless without the
+  // server-side key — so this bypasses the redaction just to prove what's
+  // actually sitting in the database.
   const raw = await payload.findByID({
     collection: "patient-records",
     id,
@@ -50,12 +65,7 @@ export default async function RecordPage({
         dateOfBirth: raw.dateOfBirth as unknown as EncryptedField,
         diagnosisNotes: raw.diagnosisNotes as unknown as EncryptedField,
       }}
-      decrypted={{
-        patientName: roleGated.patientName as unknown as DecryptResult,
-        dateOfBirth: roleGated.dateOfBirth as unknown as DecryptResult,
-        diagnosisNotes: roleGated.diagnosisNotes as unknown as DecryptResult,
-      }}
-      viewerRole={user.role as string}
+      decrypted={decrypted}
     />
   );
 }

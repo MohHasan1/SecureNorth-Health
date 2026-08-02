@@ -1,4 +1,3 @@
-import { TamperButton } from "@/components/portal/TamperButton";
 import type { EncryptedField } from "@/lib/crypto/encryption";
 
 export type DecryptResult =
@@ -50,12 +49,10 @@ export function BehindTheScenesPanel({
   recordId,
   raw,
   decrypted,
-  viewerRole,
 }: {
   recordId: string;
   raw: RawFields;
   decrypted: DecryptedFields;
-  viewerRole: string;
 }) {
   const fields = Object.keys(FIELD_LABELS) as (keyof RawFields)[];
 
@@ -125,19 +122,6 @@ export function BehindTheScenesPanel({
           ))}
         </div>
       </section>
-
-      {viewerRole === "admin" ? (
-        <section className="rounded-lg border border-danger-border bg-danger-bg p-5">
-          <h2 className="font-medium text-danger">Attacker simulation</h2>
-          <p className="mt-1 text-sm text-danger">
-            Flips one byte in the stored "diagnosis notes" ciphertext, then re-reads it. GCM's
-            authentication tag should reject it instead of returning corrupted data.
-          </p>
-          <div className="mt-3">
-            <TamperButton recordId={recordId} />
-          </div>
-        </section>
-      ) : null}
     </div>
   );
 }

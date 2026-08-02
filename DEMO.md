@@ -70,54 +70,64 @@ checks for an existing match before creating anything.
 | Nurse    | nurse@securenorth.health        | nurse-demo-pass      | Only records *she* submitted |
 | Nurse 2  | nurse2@securenorth.health        | nurse2-demo-pass     | Only records *she* submitted (not Nurse's) |
 | Provider | provider@securenorth.health     | provider-demo-pass   | Any record — a doctor needs full patient context |
-| Admin    | admin@securenorth.health        | admin-demo-pass      | Any record, plus the tamper-demo button |
+| Admin    | admin@securenorth.health        | admin-demo-pass      | Any record, plus /admin-tools/seed |
 
 Note: `pnpm seed` also creates 2 sample patient records so `/records` isn't
 empty while you're just poking around — for the actual recording, submit a
 fresh one live as described below rather than pointing at the seeded data,
 it's a better demo.
 
+## Two views of the same record
+
+- **Nurse and provider** get an ordinary patient-record page — name, DOB,
+  diagnosis notes, nothing else. That's the realistic view: a real hospital
+  portal doesn't show a nurse raw ciphertext.
+- **Admin** viewing the exact same URL gets the full "behind the scenes"
+  breakdown instead — what went out over the wire, the raw `iv` /
+  `ciphertext` / `authTag` as actually stored, and the literal JSON the
+  decrypt hook returned. That split happens automatically in
+  `records/[id]/page.tsx`, based on role.
+
 ## Recording script
 
 1. **Sign in as the nurse**, go to "New patient record", submit one (e.g.
    Jane Roe / 1990-01-01 / "Suspected flu, prescribed rest"). You land on
-   `/records/[id]`.
-2. Point out section 3 ("Decrypted on read") shows the real plaintext —
-   she can see it because it's the patient she just admitted, not because
-   everyone can see everything.
-3. Point out section 2 ("At rest") already shows the real `iv` /
-   `ciphertext` / `authTag` for every field — safe to display, since it's
-   meaningless without the server-side key.
-4. **Open `/pwned` in a new tab** — a flashy "you've breached the DB" splash
+   `/records/[id]` showing the plain patient view — she can see it because
+   it's the patient she just admitted, not because everyone can see
+   everything.
+2. **Sign out, sign in as Nurse 2**, go to `/records`. Jane Roe isn't even
+   in the list, and the record URL 404s directly — a different nurse's
+   patient is invisible, not just redacted. That's the least-privilege fix
+   for "access control policies not reviewed in two years."
+3. **Sign out, sign in as the provider**, open Jane Roe's record. Same
+   plain patient view, real plaintext, even though this provider didn't
+   submit it — a treating clinician needs that broader access, unlike a
+   nurse.
+4. **Sign out, sign in as the admin**, open the same record URL. Now you
+   get the full technical breakdown: section 1 (in transit), section 2 (the
+   real `iv`/`ciphertext`/`authTag` — safe to show, meaningless without the
+   key), section 3 (the literal decrypt-hook output as JSON).
+5. **Open `/pwned` in a new tab** — a flashy "you've breached the DB" splash
    screen (skull, glitch text, the works) for a bit of theater, then click
    **"ACCESS DATABASE"** through to `/breach`: a separate, unauthenticated
-   "attacker's view" that simulates someone who got direct access to the
-   database (e.g. via the misconfigured cloud storage bucket from the
-   brief), bypassing the app and its login entirely. It dumps every stored
-   field as raw, **editable** `iv` / `ciphertext` / `authTag` — a live
-   connection to the DB, no login needed, proving what's actually stored is
-   unreadable either way.
-5. **Sign out, sign in as Nurse 2**, go to `/records`. Jane Roe's record
-   isn't even in the list — a different nurse's patient is invisible, not
-   just redacted. That's the least-privilege fix for "access control
-   policies not reviewed in two years."
-6. **Sign out, sign in as the provider**, open Jane Roe's record URL
-   directly. Section 3 shows the real plaintext even though this provider
-   didn't submit it — a treating clinician needs that broader access,
-   unlike a nurse.
-7. **Back on `/breach`**, edit a couple of characters in `diagnosisNotes`'s
+   "attacker's view" simulating someone who got direct database access
+   (e.g. via the misconfigured cloud storage bucket from the brief),
+   bypassing the app and its login entirely. Every field is raw,
+   **editable** `iv` / `ciphertext` / `authTag` — a live connection to the
+   DB, no login needed.
+6. **On `/breach`**, edit a couple of characters in `diagnosisNotes`'s
    `ciphertext` field and click **"$ commit tampering."** This writes your
-   edit straight to the DB — you're acting as an attacker with storage
-   write access, not going through the app's normal update flow at all.
-   (The admin account also has a one-click **"Simulate ciphertext
-   tampering"** button on the record page that does the same thing
-   automatically, if you want the quick version instead.)
-8. **Switch back to the provider tab and reload the record.** Section 3 now
-   shows **⚠ Auth tag verification failed** instead of corrupted or
-   silently wrong data — that's AES-GCM's authentication tag doing its job.
-   Contrast this with a non-authenticated mode (e.g. plain CBC), which
-   would have silently returned garbage plaintext instead of detecting the
-   tampering.
+   edit straight to the DB — acting as an attacker with storage write
+   access, not going through the app's normal update flow at all.
+7. **Switch back to the nurse or provider tab and reload the record.**
+   Instead of corrupted or silently-wrong text, it now says *"This record
+   couldn't be verified — contact IT"* — realistic wording for a real
+   portal. Reload as admin instead to see the literal
+   **⚠ Auth tag verification failed** / `tampered: true` version. Either
+   way, that's AES-GCM's authentication tag doing its job — contrast with a
+   non-authenticated mode (e.g. plain CBC), which would have silently
+   decrypted to different-but-plausible-looking garbage instead of
+   detecting the tampering at all.
 
 > **Note on `/breach`:** it has no login and no access control on purpose —
 > it's not a real endpoint of the app, it's a standalone visualization of
@@ -146,7 +156,7 @@ unreadable on the wire, not simulated.
 
 - **Why AES-256-GCM over CBC:** GCM is authenticated encryption — it
   produces an auth tag that detects any post-encryption modification,
-  which is exactly what step 7 above demonstrates live. CBC alone gives
+  which is exactly what steps 6–7 above demonstrate live. CBC alone gives
   confidentiality but no integrity check, so a flipped bit would just
   decrypt to silently-wrong plaintext instead of raising an error.
 - **How the key is handled:** `PATIENT_FIELD_ENCRYPTION_KEY` is a 32-byte

@@ -3,6 +3,9 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getPayload } from "payload";
 
+import type { DecryptResult } from "@/components/portal/BehindTheScenesPanel";
+import { RecordsSearch } from "@/components/portal/RecordsSearch";
+import { decryptResultText } from "@/lib/decryptResultText";
 import { getCurrentUser } from "@/lib/getCurrentUser";
 
 export default async function RecordsListPage() {
@@ -13,7 +16,11 @@ export default async function RecordsListPage() {
 
   // A nurse's access rule scopes this to records they submitted; a
   // provider/admin's rule allows all — same access control as everywhere
-  // else, just applied to a list instead of a single document.
+  // else, just applied to a list instead of a single document. Every row
+  // returned here is one this viewer is also allowed to decrypt (nurses
+  // only ever see their own patients, who they can always decrypt; a
+  // provider/admin can decrypt anything), so patient names render for
+  // real instead of showing anonymous record IDs.
   const { docs } = await payload.find({
     collection: "patient-records",
     user,
@@ -22,6 +29,13 @@ export default async function RecordsListPage() {
     sort: "-createdAt",
     limit: 50,
   });
+
+  const rows = docs.map((doc) => ({
+    id: String(doc.id),
+    patientName: decryptResultText(doc.patientName as unknown as DecryptResult, "Unknown"),
+    dateOfBirth: decryptResultText(doc.dateOfBirth as unknown as DecryptResult, "—"),
+    createdAt: doc.createdAt,
+  }));
 
   return (
     <div>
@@ -35,26 +49,14 @@ export default async function RecordsListPage() {
         </Link>
       </div>
 
-      {docs.length === 0 ? (
+      {rows.length === 0 ? (
         <p className="mt-6 text-sm text-muted">
           No records yet. Submit one from &quot;New record&quot;.
         </p>
       ) : (
-        <ul className="mt-6 divide-y divide-border rounded-lg border border-border bg-surface">
-          {docs.map((doc) => (
-            <li key={doc.id}>
-              <Link
-                href={`/records/${doc.id}`}
-                className="flex items-center justify-between px-4 py-3 text-sm hover:bg-bg"
-              >
-                <span>Record #{doc.id}</span>
-                <span className="text-muted">
-                  {new Date(doc.createdAt).toLocaleString()}
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
+        <div className="mt-6">
+          <RecordsSearch rows={rows} />
+        </div>
       )}
     </div>
   );
