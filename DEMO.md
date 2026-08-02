@@ -45,6 +45,19 @@ cp .env.production.example .env.production   # fill in DATABASE_URI, PAYLOAD_SEC
 pnpm seed:prod
 ```
 
+That works from your own machine even after deploying, since MongoDB is a
+network database — `DATABASE_URI` just needs to point at the real cluster,
+no SSH or terminal access to the deployed app required.
+
+**After that first run**, once at least one admin account exists, you can
+also reseed (e.g. add the sample records back after a database reset)
+straight from the deployed app itself: log in as admin → **"Seed data"** in
+the nav → **/admin-tools/seed**. Same underlying logic as `pnpm seed`, just
+triggered by a button instead of a script — useful once there's no local
+terminal in the loop at all. It can't bootstrap the very first admin from a
+completely empty database, though — that one time still needs `pnpm
+seed:prod` run locally.
+
 `seed.ts` is the same script either way — it just goes through Payload's
 Local API, which already points at whichever database `payload.config.ts`
 picked. Both the accounts and the sample records are safe to re-run: it

@@ -20,14 +20,16 @@ src/
   app/
     (payload)/          Payload's required admin + REST API routes
     (portal)/            nurse/provider/admin-facing pages (login, intake, records/[id])
+    (portal)/admin-tools/seed/  admin-only "seed demo data" page (for deployed use)
     (hacker)/pwned/      flashy "breach" splash screen, links to /breach
     (hacker)/breach/     unauthenticated, editable "attacker with raw DB access" view
   collections/            Users, PatientRecords, AccessLogs
-  components/portal/      intake form, behind-the-scenes panel, tamper button
+  components/portal/      intake form, behind-the-scenes panel, tamper button, seed runner
   lib/
     crypto/encryption.ts  AES-256-GCM encrypt/decrypt
-    actions/               server action for the tamper demo
+    seedDemoData.ts        the actual seeding logic — shared by seed.ts and the admin page
+    actions/               server actions: tamper demo, breach-page writes, run seed
   payload.config.ts        picks SQLite (dev) or MongoDB (prod) by NODE_ENV
-  seed.ts                  creates the 4 demo accounts + sample records — run with
+  seed.ts                  CLI wrapper around seedDemoData.ts — run with
                             `pnpm seed` (dev) or `pnpm seed:prod` (production/Mongo)
 ```

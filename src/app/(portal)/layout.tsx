@@ -43,6 +43,11 @@ export default async function PortalLayout({
                   <Link href="/intake" className="hover:text-foreground">
                     New record
                   </Link>
+                  {user.role === "admin" ? (
+                    <Link href="/admin-tools/seed" className="hover:text-foreground">
+                      Seed data
+                    </Link>
+                  ) : null}
                 </nav>
               ) : null}
             </div>
