@@ -6,6 +6,12 @@ import type { EncryptedField } from "@/lib/crypto/encryption";
 
 const PHI_FIELDS = ["patientName", "dateOfBirth", "diagnosisNotes"] as const;
 
+// This page reads live from the DB but never touches cookies/headers (it's
+// intentionally unauthenticated), so Next.js has no signal to treat it as
+// dynamic and would otherwise try to statically prerender it at build
+// time, running a real DB query before the schema even exists yet.
+export const dynamic = "force-dynamic";
+
 export default async function BreachPage() {
   const payload = await getPayload({ config });
 

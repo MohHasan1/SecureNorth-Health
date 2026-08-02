@@ -12,14 +12,16 @@ import { Users } from "./collections/Users";
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
 
-// Local dev uses a zero-setup SQLite file, nothing to install, nothing to
-// run. Production uses MongoDB, since that's what an actual deployment
-// (Vercel/Render/etc.) would point at. Same DATABASE_URI env var either
-// way, just a different connection string format for each environment.
-const db =
-  process.env.NODE_ENV === "production"
-    ? mongooseAdapter({ url: process.env.DATABASE_URI || "" })
-    : sqliteAdapter({ client: { url: process.env.DATABASE_URI || "file:./db.sqlite" } });
+// Picked from the DATABASE_URI value itself, not NODE_ENV. `next build`
+// always sets NODE_ENV=production internally, even for a local build with
+// no Mongo instance around, so branching on NODE_ENV would force a Mongo
+// connection any time someone runs `pnpm build` locally. A mongodb:// or
+// mongodb+srv:// URI means Mongo, anything else (including unset) falls
+// back to the local SQLite file.
+const databaseUri = process.env.DATABASE_URI || "file:./db.sqlite";
+const db = databaseUri.startsWith("mongodb")
+  ? mongooseAdapter({ url: databaseUri })
+  : sqliteAdapter({ client: { url: databaseUri } });
 
 export default buildConfig({
   admin: {
