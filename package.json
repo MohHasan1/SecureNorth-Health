@@ -2,14 +2,23 @@
   "name": "roject",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "generate:importmap": "payload generate:importmap",
+    "generate:types": "payload generate:types",
+    "seed": "tsx --env-file=.env src/seed.ts"
   },
   "dependencies": {
+    "@payloadcms/db-sqlite": "^3.87.0",
+    "@payloadcms/next": "^3.87.0",
+    "@payloadcms/richtext-lexical": "^3.87.0",
+    "graphql": "^16.14.2",
     "next": "16.2.12",
+    "payload": "^3.87.0",
     "react": "19.2.4",
     "react-dom": "19.2.4"
   },
@@ -21,6 +30,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.12",
     "tailwindcss": "^4",
+    "tsx": "^4.23.1",
     "typescript": "^5"
   }
 }
