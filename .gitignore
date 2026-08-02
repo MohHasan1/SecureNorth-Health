@@ -45,4 +45,3 @@ next-env.d.ts
 # payload / local db
 db.sqlite
 db.sqlite-*
-src/payload-types.ts

@@ -1,7 +1,10 @@
-import type { CollectionConfig } from "payload";
+import type { Access, CollectionConfig, FieldAccess } from "payload";
 
-const isAdmin = ({ req: { user } }: { req: { user: { role?: string } | null } }) =>
-  user?.role === "admin";
+// Typed against Payload's own Access shape instead of a hand-written one,
+// so this stays correct even if src/payload-types.ts (gitignored, only
+// exists after `payload generate:types` has run) isn't present yet.
+const isAdmin: Access = ({ req: { user } }) => user?.role === "admin";
+const isAdminField: FieldAccess = ({ req: { user } }) => user?.role === "admin";
 
 export const Users: CollectionConfig = {
   slug: "users",
@@ -40,7 +43,7 @@ export const Users: CollectionConfig = {
       access: {
         // Only an admin can change roles. A nurse editing their own
         // profile can't promote themselves to doctor/admin.
-        update: isAdmin,
+        update: isAdminField,
       },
     },
   ],
