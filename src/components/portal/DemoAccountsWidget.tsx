@@ -74,7 +74,7 @@ export function DemoAccountsWidget({ onSelect }: { onSelect: (account: Account) 
               key={account.email}
               type="button"
               onClick={() => handleSelect(account)}
-              className="flex w-full items-start gap-2 px-3 py-2 text-left hover:bg-green-500/10"
+              className="flex w-full cursor-pointer items-start gap-2 px-3 py-2 text-left hover:bg-green-500/10"
             >
               <span className="text-green-600">$</span>
               <span className="flex flex-col">

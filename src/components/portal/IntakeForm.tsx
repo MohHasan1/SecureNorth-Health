@@ -81,7 +81,7 @@ export function IntakeForm() {
       <button
         type="submit"
         disabled={loading}
-        className="w-full rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary-hover disabled:opacity-50"
+        className="w-full cursor-pointer rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary-hover disabled:cursor-default disabled:opacity-50"
       >
         {loading ? "Submitting…" : "Submit patient record"}
       </button>

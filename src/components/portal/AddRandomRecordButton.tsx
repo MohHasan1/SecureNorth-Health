@@ -28,7 +28,7 @@ export function AddRandomRecordButton() {
         type="button"
         onClick={handleClick}
         disabled={loading}
-        className="rounded-md border border-border bg-surface px-4 py-2 text-sm font-medium text-foreground hover:bg-bg disabled:opacity-50"
+        className="cursor-pointer rounded-md border border-border bg-surface px-4 py-2 text-sm font-medium text-foreground hover:bg-bg disabled:cursor-default disabled:opacity-50"
       >
         {loading ? "Adding…" : "+ Add random patient record"}
       </button>

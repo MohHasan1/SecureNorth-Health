@@ -24,7 +24,7 @@ export function DeleteRecordButton({ recordId }: { recordId: string }) {
       type="button"
       onClick={handleClick}
       disabled={loading}
-      className="rounded-md border border-danger-border bg-surface px-3 py-1.5 text-sm font-medium text-danger hover:bg-danger-bg disabled:opacity-50"
+      className="cursor-pointer rounded-md border border-danger-border bg-surface px-3 py-1.5 text-sm font-medium text-danger hover:bg-danger-bg disabled:cursor-default disabled:opacity-50"
     >
       {loading ? "Deleting…" : "Delete record"}
     </button>

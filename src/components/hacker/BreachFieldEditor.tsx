@@ -61,7 +61,7 @@ export function BreachFieldEditor({
             type="button"
             onClick={commit}
             disabled={!dirty || status === "writing"}
-            className="border border-green-500/50 px-2 py-0.5 text-green-400 hover:bg-green-500/10 disabled:opacity-40"
+            className="cursor-pointer border border-green-500/50 px-2 py-0.5 text-green-400 hover:bg-green-500/10 disabled:cursor-default disabled:opacity-40"
           >
             {status === "writing" ? "writing to db..." : "$ commit tampering"}
           </button>
