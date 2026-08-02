@@ -28,8 +28,8 @@ function randomDateOfBirth() {
 }
 
 // Admin-only. Attributed to a random existing nurse rather than the admin
-// itself — simulates "another patient came in," and overrideAccess (with
-// no `user` passed) means PatientRecords' beforeChange hook won't stomp
+// itself, simulating "another patient came in." overrideAccess (with no
+// `user` passed) means PatientRecords' beforeChange hook won't stomp
 // submittedBy with the caller's own id the way it does for a real intake.
 export async function addRandomPatientRecord(): Promise<string> {
   const headers = await getHeaders();
@@ -48,7 +48,7 @@ export async function addRandomPatientRecord(): Promise<string> {
   });
 
   if (nurses.docs.length === 0) {
-    throw new Error("No nurse accounts exist yet — run “Seed demo data” first.");
+    throw new Error("No nurse accounts exist yet. Run \"Seed demo data\" first.");
   }
 
   const patientName = `${randomFrom(FIRST_NAMES)} ${randomFrom(LAST_NAMES)}`;

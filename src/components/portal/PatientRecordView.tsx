@@ -7,17 +7,17 @@ type DecryptedFields = {
 };
 
 // Deliberately friendlier/more specific wording than the records-list
-// version (decryptResultText) — this is the full-page view, room for a
+// version (decryptResultText). This is the full-page view, room for a
 // real sentence instead of a one-word list-row label.
 function fieldText(result: DecryptResult, fallback: string) {
   if (result.restricted) return "You don't have access to this record.";
-  if ("tampered" in result) return "This record couldn't be verified — contact IT.";
+  if ("tampered" in result) return "This record couldn't be verified. Contact IT.";
   return result.plaintext || fallback;
 }
 
-// The ordinary, realistic view of a patient record — what a nurse or
-// provider actually sees day to day. No ciphertext, no crypto internals;
-// that's the admin-only BehindTheScenesPanel instead.
+// The ordinary, realistic view of a patient record: what a nurse or
+// doctor actually sees day to day. No ciphertext, no crypto internals.
+// That's the admin-only BehindTheScenesPanel instead.
 export function PatientRecordView({
   recordId,
   decrypted,
@@ -33,7 +33,7 @@ export function PatientRecordView({
           {fieldText(decrypted.patientName, "Unknown patient")}
         </h1>
         <p className="mt-1 text-sm text-muted">
-          Date of birth: {fieldText(decrypted.dateOfBirth, "—")}
+          Date of birth: {fieldText(decrypted.dateOfBirth, "N/A")}
         </p>
       </div>
 

@@ -5,13 +5,13 @@ import { useRef, useState } from "react";
 const DEMO_ACCOUNTS = [
   { role: "Nurse", email: "nurse@securenorth.health", password: "nurse-demo-pass" },
   { role: "Nurse 2", email: "nurse2@securenorth.health", password: "nurse2-demo-pass" },
-  { role: "Provider", email: "provider@securenorth.health", password: "provider-demo-pass" },
+  { role: "Doctor", email: "doctor@securenorth.health", password: "doctor-demo-pass" },
   { role: "Admin", email: "admin@securenorth.health", password: "admin-demo-pass" },
 ] as const;
 
 type Account = (typeof DEMO_ACCOUNTS)[number];
 
-// A fixed-position dev tool, not a page element — drag it anywhere by its
+// A fixed-position dev tool, not a page element. Drag it anywhere by its
 // handle, click (without dragging) to pop the panel open.
 export function DemoAccountsWidget({ onSelect }: { onSelect: (account: Account) => void }) {
   const [offset, setOffset] = useState({ right: 24, bottom: 24 });

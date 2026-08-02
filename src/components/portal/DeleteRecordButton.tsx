@@ -11,7 +11,7 @@ export function DeleteRecordButton({ recordId }: { recordId: string }) {
     if (!confirm("Delete this patient record? This can't be undone.")) return;
 
     setLoading(true);
-    // Same real REST endpoint the rest of the app uses — Payload's own
+    // Same real REST endpoint the rest of the app uses. Payload's own
     // collection access control (admin-only for update/delete) is what's
     // actually enforcing this, not anything client-side.
     await fetch(`/api/patient-records/${recordId}`, { method: "DELETE" });

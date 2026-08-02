@@ -26,7 +26,7 @@ export function EditRecordForm({
     setError(null);
     setLoading(true);
 
-    // Same real REST endpoint the intake form POSTs to — a PATCH here goes
+    // Same real REST endpoint the intake form POSTs to. A PATCH here goes
     // through PatientRecords' beforeChange hook exactly like a create
     // does, so the edited plaintext gets encrypted fresh with a new IV.
     const res = await fetch(`/api/patient-records/${recordId}?depth=0`, {
@@ -38,7 +38,7 @@ export function EditRecordForm({
     setLoading(false);
 
     if (!res.ok) {
-      setError("Could not save — are you still signed in as admin?");
+      setError("Could not save. Are you still signed in as admin?");
       return;
     }
 

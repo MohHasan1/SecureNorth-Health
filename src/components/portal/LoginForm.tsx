@@ -23,7 +23,7 @@ export function LoginForm() {
     setError(null);
     setLoading(true);
 
-    // Hits Payload's own auto-generated auth endpoint directly — this is
+    // Hits Payload's own auto-generated auth endpoint directly. This is
     // the real request you can inspect in DevTools / over the HTTPS tunnel.
     const res = await fetch("/api/users/login", {
       method: "POST",

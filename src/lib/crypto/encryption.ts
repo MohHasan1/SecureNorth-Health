@@ -1,7 +1,7 @@
 import { createCipheriv, createDecipheriv, randomBytes } from "crypto";
 
 // AES-256-GCM: authenticated encryption. Unlike CBC, GCM produces an auth
-// tag that detects any bit-flip in the ciphertext at decrypt time — that
+// tag that detects any bit-flip in the ciphertext at decrypt time. That
 // property is what the tamper-detection demo relies on.
 const ALGORITHM = "aes-256-gcm";
 const IV_LENGTH_BYTES = 12; // 96-bit IV is the NIST-recommended size for GCM
@@ -44,7 +44,7 @@ export function encryptField(plaintext: string): EncryptedField {
   };
 }
 
-// Throws if the auth tag doesn't match — this is GCM detecting that the
+// Throws if the auth tag doesn't match. This is GCM detecting that the
 // ciphertext (or tag) was modified after encryption, e.g. by an attacker
 // or by data corruption. That thrown error is what the tamper demo shows.
 export function decryptField(field: EncryptedField): string {

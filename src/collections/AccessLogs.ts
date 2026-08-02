@@ -1,7 +1,7 @@
 import type { CollectionConfig } from "payload";
 
 // Written only by the system (PatientRecords' afterRead hook, via
-// overrideAccess), never by a client request — so create is locked down
+// overrideAccess), never by a client request. So create is locked down
 // entirely here and access control is enforced at the write site instead.
 export const AccessLogs: CollectionConfig = {
   slug: "access-logs",
@@ -25,7 +25,7 @@ export const AccessLogs: CollectionConfig = {
     {
       // Not required: audit log entries must survive the record they
       // reference being deleted (an admin deleting a record shouldn't also
-      // erase the evidence that it once existed and was read) — SQLite
+      // erase the evidence that it once existed and was read). SQLite
       // nulls this out on delete instead of blocking the delete entirely,
       // which it can't do if the column is NOT NULL.
       name: "record",
@@ -37,10 +37,7 @@ export const AccessLogs: CollectionConfig = {
       name: "action",
       type: "select",
       required: true,
-      options: [
-        { label: "Read", value: "read" },
-        { label: "Tamper (demo)", value: "tamper" },
-      ],
+      options: [{ label: "Read", value: "read" }],
     },
   ],
 };

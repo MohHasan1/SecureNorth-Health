@@ -34,14 +34,14 @@ function DecryptedValue({ result }: { result: DecryptResult }) {
   if (result.restricted) {
     return (
       <span className="inline-flex items-center gap-1 rounded bg-restricted-bg px-2 py-0.5 text-xs font-medium text-restricted">
-        🔒 Restricted — you don't have clearance for this record
+        🔒 Restricted. You don't have clearance for this record
       </span>
     );
   }
   if ("tampered" in result) {
     return (
       <span className="inline-flex items-center gap-1 rounded bg-danger-bg px-2 py-0.5 text-xs font-medium text-danger">
-        ⚠ Auth tag verification failed — ciphertext was modified
+        ⚠ Auth tag verification failed. Ciphertext was modified
       </span>
     );
   }
@@ -87,14 +87,14 @@ export function BehindTheScenesPanel({
             POST /api/patient-records
           </code>{" "}
           over HTTPS. Open DevTools → Network (or the public tunnel URL from DEMO.md) to inspect
-          the request — TLS is what makes it unreadable on the wire, not this app.
+          the request. TLS is what makes it unreadable on the wire, not this app.
         </p>
       </section>
 
       <section className="rounded-lg border border-border bg-surface p-5">
         <h2 className="font-medium">2. At rest (as stored in db.sqlite)</h2>
         <p className="mt-1 text-sm text-muted">
-          Every field below is AES-256-GCM ciphertext. This is safe to display — without the
+          Every field below is AES-256-GCM ciphertext. This is safe to display, without the
           key, it's meaningless.
         </p>
         <div className="mt-3 space-y-3 overflow-x-auto">
@@ -117,7 +117,7 @@ export function BehindTheScenesPanel({
       <section className="rounded-lg border border-border bg-surface p-5">
         <h2 className="font-medium">3. Decrypted on read (access-controlled)</h2>
         <p className="mt-1 text-sm text-muted">
-          What you see below depends on your role — this is the least-privilege fix for
+          What you see below depends on your role. This is the least-privilege fix for
           SecureNorth's stale access policies.
         </p>
         <div className="mt-3 space-y-3">
@@ -127,7 +127,7 @@ export function BehindTheScenesPanel({
                 <span className="text-sm font-medium text-foreground">{FIELD_LABELS[field]}</span>
                 <DecryptedValue result={decrypted[field]} />
               </div>
-              {/* The literal return value of the afterRead field hook —
+              {/* The literal return value of the afterRead field hook,
                   not just the friendly badge above it. */}
               <pre className="mt-2 overflow-x-auto rounded bg-restricted-bg px-2 py-1 font-mono text-[11px] text-muted">
                 {JSON.stringify(decrypted[field])}

@@ -1,4 +1,4 @@
-/* Payload's required admin-panel 404 route — mirrors the official blank template. */
+/* Payload's required admin-panel 404 route. Mirrors the official blank template. */
 import type { Metadata } from "next";
 
 import config from "@payload-config";

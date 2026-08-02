@@ -1,4 +1,4 @@
-/* Payload's required admin-panel root layout — mirrors the official blank template. */
+/* Payload's required admin-panel root layout. Mirrors the official blank template. */
 import config from "@payload-config";
 import "@payloadcms/next/css";
 import type { ServerFunctionClient } from "payload";

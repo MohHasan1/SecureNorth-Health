@@ -7,9 +7,9 @@ import {
 } from "@/lib/crypto/encryption";
 
 // Roles that can decrypt PHI on ANY patient record, not just ones they
-// submitted — providers need full patient context to treat someone they
+// submitted. Doctors need full patient context to treat someone they
 // didn't personally admit, and admin needs it for the tamper demo.
-const BROAD_ACCESS_ROLES = new Set(["provider", "admin"]);
+const BROAD_ACCESS_ROLES = new Set(["doctor", "admin"]);
 
 function isEncryptedField(value: unknown): value is EncryptedField {
   return (
@@ -22,7 +22,7 @@ function isEncryptedField(value: unknown): value is EncryptedField {
 }
 
 // Runs on every create/update. Encrypts plain-text input coming from the
-// intake form before it ever reaches the database — this is "at rest."
+// intake form before it ever reaches the database. This is "at rest."
 // If the value is already an EncryptedField (unchanged on this save, or a
 // deliberately corrupted blob from the tamper demo) it's passed through
 // untouched instead of being re-encrypted.
@@ -33,9 +33,9 @@ const encryptOnChange: FieldHook = ({ value }) => {
 };
 
 // Runs on every read. `context.raw` is set by the tamper-demo endpoint to
-// fetch the untouched ciphertext blob directly — everyone else gets either
+// fetch the untouched ciphertext blob directly. Everyone else gets either
 // the decrypted plaintext or a redacted placeholder, depending on role:
-// provider/admin can decrypt any record, a nurse can only decrypt the
+// doctor/admin can decrypt any record, a nurse can only decrypt the
 // records she personally submitted.
 const decryptForAuthorizedRoles: FieldHook = ({ value, req, context, data }) => {
   if (context?.raw) return value;
@@ -59,7 +59,7 @@ const decryptForAuthorizedRoles: FieldHook = ({ value, req, context, data }) => 
   try {
     return { restricted: false, plaintext: decryptField(value) };
   } catch {
-    // GCM auth tag verification failed — the ciphertext was modified
+    // GCM auth tag verification failed. The ciphertext was modified
     // after encryption. This is what the tamper-demo button proves live.
     return { restricted: false, tampered: true };
   }
@@ -86,8 +86,8 @@ export const PatientRecords: CollectionConfig = {
     create: ({ req: { user } }) => Boolean(user),
     read: ({ req: { user } }) => {
       if (!user) return false;
-      if (user.role === "provider" || user.role === "admin") return true;
-      // Nurses can see the records they submitted (still redacted PHI —
+      if (user.role === "doctor" || user.role === "admin") return true;
+      // Nurses can see the records they submitted (still redacted PHI,
       // decrypt authorization is separate, see decryptForAuthorizedRoles).
       return { submittedBy: { equals: user.id } };
     },
@@ -117,7 +117,7 @@ export const PatientRecords: CollectionConfig = {
       },
     ],
     // deleteByID formats its response by running this same collection's
-    // afterRead hooks on the doc it just deleted — without this flag, the
+    // afterRead hooks on the doc it just deleted. Without this flag, the
     // audit-log hook below would try to insert a log row pointing at a
     // record ID that no longer exists in the DB, failing the delete with
     // a foreign-key error even though the delete itself already succeeded.

@@ -11,9 +11,9 @@ export const Users: CollectionConfig = {
     defaultColumns: ["email", "name", "role"],
   },
   access: {
-    // Accounts are provisioned by an admin, not self-registered — mirrors
+    // Accounts are provisioned by an admin, not self-registered. Mirrors
     // real hospital IT onboarding and closes the "anyone can grant
-    // themselves provider access" gap.
+    // themselves doctor access" gap.
     create: isAdmin,
     read: ({ req: { user } }) =>
       user?.role === "admin" ? true : { id: { equals: user?.id } },
@@ -34,12 +34,12 @@ export const Users: CollectionConfig = {
       defaultValue: "nurse",
       options: [
         { label: "Nurse", value: "nurse" },
-        { label: "Provider", value: "provider" },
+        { label: "Doctor", value: "doctor" },
         { label: "Admin", value: "admin" },
       ],
       access: {
-        // Only an admin can change roles — a nurse editing their own
-        // profile can't promote themselves to provider/admin.
+        // Only an admin can change roles. A nurse editing their own
+        // profile can't promote themselves to doctor/admin.
         update: isAdmin,
       },
     },

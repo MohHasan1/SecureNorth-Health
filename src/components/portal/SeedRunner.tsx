@@ -16,7 +16,7 @@ export function SeedRunner() {
       const result = await runSeed();
       setLog(result);
     } catch {
-      setError("Seed failed — check server logs.");
+      setError("Seed failed. Check server logs.");
     } finally {
       setLoading(false);
     }

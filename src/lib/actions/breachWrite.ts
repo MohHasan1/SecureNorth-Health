@@ -9,7 +9,7 @@ import type { EncryptedField } from "@/lib/crypto/encryption";
 const PHI_FIELDS = ["patientName", "dateOfBirth", "diagnosisNotes"] as const;
 type PhiField = (typeof PHI_FIELDS)[number];
 
-// No auth check here on purpose — this is the write-side counterpart to
+// No auth check here on purpose. This is the write-side counterpart to
 // /breach's read-only dump. It simulates an attacker who already has raw
 // write access to the storage layer (e.g. a compromised backup, not the
 // app's own login), so it goes straight to the DB the same way the app's

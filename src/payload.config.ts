@@ -12,7 +12,7 @@ import { Users } from "./collections/Users";
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
 
-// Local dev uses a zero-setup SQLite file — nothing to install, nothing to
+// Local dev uses a zero-setup SQLite file, nothing to install, nothing to
 // run. Production uses MongoDB, since that's what an actual deployment
 // (Vercel/Render/etc.) would point at. Same DATABASE_URI env var either
 // way, just a different connection string format for each environment.

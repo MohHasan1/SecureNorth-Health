@@ -3,7 +3,7 @@
 /*
  * Design tokens. Everything in the app should read colors through these
  * (bg-bg, bg-surface, text-foreground, text-muted, border-border, ...)
- * instead of hardcoded Tailwind palette classes like `bg-slate-50` — that
+ * instead of hardcoded Tailwind palette classes like `bg-slate-50`. That
  * was the bug: an unlayered `body {}` rule here was overriding Tailwind's
  * layered utility classes with dark-mode values, while most components
  * still used static light-only slate classes, so text went invisible in

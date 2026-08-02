@@ -13,8 +13,8 @@ export default async function SeedPage() {
       <div>
         <h1 className="text-xl font-semibold">Seed demo data</h1>
         <p className="mt-1 text-sm text-muted">
-          Creates the 4 demo accounts and 2 sample patient records if they don't already exist —
-          same logic as <code className="rounded bg-restricted-bg px-1 py-0.5 text-xs">pnpm seed</code>,
+          Creates the 4 demo accounts and 2 sample patient records if they don't already exist.
+          Same logic as <code className="rounded bg-restricted-bg px-1 py-0.5 text-xs">pnpm seed</code>,
           just runnable from here against whatever database this deployment is actually using.
           Safe to click more than once.
         </p>

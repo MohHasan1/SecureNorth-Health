@@ -12,12 +12,12 @@ const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"]
 
 export const metadata: Metadata = {
   title: "SecureNorth Health Portal",
-  description: "Patient intake demo — encryption at rest and in transit",
+  description: "Patient intake demo, encryption at rest and in transit",
 };
 
 const ROLE_LABEL: Record<string, string> = {
   nurse: "Nurse",
-  provider: "Provider",
+  doctor: "Doctor",
   admin: "Admin",
 };
 
@@ -36,9 +36,6 @@ export default async function PortalLayout({
                 SecureNorth Health <span className="text-muted font-normal">· Portal</span>
               </Link>
               <nav className="flex items-center gap-4 text-sm text-muted">
-                <Link href="/help" className="hover:text-foreground">
-                  Help
-                </Link>
                 {user ? (
                   <>
                     <Link href="/records" className="hover:text-foreground">
@@ -56,14 +53,22 @@ export default async function PortalLayout({
                 ) : null}
               </nav>
             </div>
-            {user ? (
-              <div className="flex items-center gap-3 text-sm">
-                <span className="text-muted">
-                  {user.name} · {ROLE_LABEL[user.role as string] ?? user.role}
-                </span>
-                <LogoutButton />
-              </div>
-            ) : null}
+            <div className="flex items-center gap-4 text-sm">
+              <Link
+                href="/help"
+                className="flex items-center gap-1.5 rounded-full border border-primary bg-primary px-3 py-1.5 font-medium text-primary-foreground hover:bg-primary-hover"
+              >
+                <span aria-hidden>❓</span> Help
+              </Link>
+              {user ? (
+                <>
+                  <span className="text-muted">
+                    {user.name} · {ROLE_LABEL[user.role as string] ?? user.role}
+                  </span>
+                  <LogoutButton />
+                </>
+              ) : null}
+            </div>
           </div>
         </header>
         <main className="flex-1">

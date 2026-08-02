@@ -6,9 +6,9 @@ import { getPayload } from "payload";
 
 import { seedDemoData } from "@/lib/seedDemoData";
 
-// Admin-only, same access rule as the tamper-demo action — this is what
-// lets you seed a deployed production database (Mongo) without a terminal
-// or SSH access to wherever it's actually hosted.
+// Admin-only. This is what lets you seed a deployed production database
+// (Mongo) without a terminal or SSH access to wherever it's actually
+// hosted.
 export async function runSeed(): Promise<string[]> {
   const headers = await getHeaders();
   const payload = await getPayload({ config });

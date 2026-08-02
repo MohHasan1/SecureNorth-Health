@@ -14,12 +14,12 @@ export default async function RecordsListPage() {
 
   const payload = await getPayload({ config });
 
-  // A nurse's access rule scopes this to records they submitted; a
-  // provider/admin's rule allows all — same access control as everywhere
+  // A nurse's access rule scopes this to records they submitted. A
+  // doctor/admin's rule allows all, same access control as everywhere
   // else, just applied to a list instead of a single document. Every row
   // returned here is one this viewer is also allowed to decrypt (nurses
-  // only ever see their own patients, who they can always decrypt; a
-  // provider/admin can decrypt anything), so patient names render for
+  // only ever see their own patients, who they can always decrypt, and a
+  // doctor/admin can decrypt anything), so patient names render for
   // real instead of showing anonymous record IDs.
   const { docs } = await payload.find({
     collection: "patient-records",
@@ -33,7 +33,7 @@ export default async function RecordsListPage() {
   const rows = docs.map((doc) => ({
     id: String(doc.id),
     patientName: decryptResultText(doc.patientName as unknown as DecryptResult, "Unknown"),
-    dateOfBirth: decryptResultText(doc.dateOfBirth as unknown as DecryptResult, "—"),
+    dateOfBirth: decryptResultText(doc.dateOfBirth as unknown as DecryptResult, "N/A"),
     createdAt: doc.createdAt,
   }));
 

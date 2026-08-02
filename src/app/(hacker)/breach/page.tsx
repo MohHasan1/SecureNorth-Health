@@ -9,7 +9,7 @@ const PHI_FIELDS = ["patientName", "dateOfBirth", "diagnosisNotes"] as const;
 export default async function BreachPage() {
   const payload = await getPayload({ config });
 
-  // No user, no access control — this route intentionally bypasses the
+  // No user, no access control. This route intentionally bypasses the
   // app's auth entirely, the same way an attacker with direct storage
   // access would (the "cloud storage buckets... overly permissive access"
   // issue from the brief). context: { raw: true } means the PatientRecords
@@ -34,7 +34,7 @@ root@attacker:~# sqlite3 loot/db.sqlite "SELECT * FROM patient_records;"
 
       <p className="mt-4 text-green-500">
         [+] dumped {docs.length} row{docs.length === 1 ? "" : "s"} from
-        patient_records — fields are writable below, this is a live connection
+        patient_records. Fields are writable below, this is a live connection
         to the DB
       </p>
 
@@ -62,7 +62,7 @@ error: AES-256-GCM ciphertext is computationally infeasible to decrypt without i
       </pre>
       <p className="mt-4 text-green-600">
         Full read <span className="text-green-300">and write</span> access to
-        the database. Edit any field above and commit it — you can corrupt the
+        the database. Edit any field above and commit it. You can corrupt the
         ciphertext, but you still can't read or produce valid plaintext without
         the key. Go check the record through the app afterward: it'll show a
         failed auth tag, not silently-wrong data.

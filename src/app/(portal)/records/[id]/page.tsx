@@ -18,8 +18,8 @@ export default async function RecordPage({
 
   const payload = await getPayload({ config });
 
-  // Respects this viewer's actual role — a nurse gets redacted PHI here,
-  // a provider/admin gets the decrypted plaintext.
+  // Respects this viewer's actual role. A nurse gets redacted PHI here,
+  // a doctor/admin gets the decrypted plaintext.
   const roleGated = await payload
     .findByID({
       collection: "patient-records",
@@ -38,16 +38,16 @@ export default async function RecordPage({
     diagnosisNotes: roleGated.diagnosisNotes as unknown as DecryptResult,
   };
 
-  // Nurse and provider get an ordinary patient-record view, like a real
+  // Nurse and doctor get an ordinary patient-record view, like a real
   // EHR. The crypto-internals breakdown (ciphertext, raw hook output, the
-  // "in transit" explanation) is admin-only — that's not something a real
+  // "in transit" explanation) is admin-only. Not something a real
   // hospital portal would show a clinician day to day.
   if (user.role !== "admin") {
     return <PatientRecordView recordId={id} decrypted={decrypted} />;
   }
 
-  // The raw ciphertext blob is safe to show — it's meaningless without the
-  // server-side key — so this bypasses the redaction just to prove what's
+  // The raw ciphertext blob is safe to show, it's meaningless without the
+  // server-side key, so this bypasses the redaction just to prove what's
   // actually sitting in the database.
   const raw = await payload.findByID({
     collection: "patient-records",

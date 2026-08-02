@@ -8,7 +8,7 @@ const DEMO_USERS = [
     role: "nurse",
   },
   {
-    // A second nurse — needed to demo that a nurse can decrypt records she
+    // A second nurse. Needed to demo that a nurse can decrypt records she
     // submitted, but not another nurse's patients.
     email: "nurse2@securenorth.health",
     password: "nurse2-demo-pass",
@@ -16,10 +16,10 @@ const DEMO_USERS = [
     role: "nurse",
   },
   {
-    email: "provider@securenorth.health",
-    password: "provider-demo-pass",
+    email: "doctor@securenorth.health",
+    password: "doctor-demo-pass",
     name: "Dr. Priya Sharma",
-    role: "provider",
+    role: "doctor",
   },
   {
     email: "admin@securenorth.health",
@@ -47,10 +47,10 @@ const SAMPLE_RECORDS = [
 ] as const;
 
 // Shared by the CLI script (src/seed.ts, for local/pnpm seed:prod use) and
-// the in-app admin "Seed demo data" page (for deployed environments where
-// there's no terminal to run the CLI against) — one seeding implementation,
-// two ways to trigger it. Safe to re-run: everything checks for an
-// existing match before creating anything.
+// the in-app admin "Seed demo data" page (for deployed environments with
+// no terminal to run the CLI against). One seeding implementation, two ways
+// to trigger it. Safe to re-run: everything checks for an existing match
+// before creating anything.
 export async function seedDemoData(payload: Payload): Promise<string[]> {
   const log: string[] = [];
   const userIdByEmail = new Map<string, number | string>();
@@ -64,7 +64,7 @@ export async function seedDemoData(payload: Payload): Promise<string[]> {
     });
 
     if (existing.docs.length > 0) {
-      log.push(`Skipping ${user.email} — already exists`);
+      log.push(`Skipping ${user.email}, already exists`);
       userIdByEmail.set(user.email, existing.docs[0].id);
       continue;
     }
@@ -88,7 +88,7 @@ export async function seedDemoData(payload: Payload): Promise<string[]> {
     });
 
     if (existing.docs.length > 0) {
-      log.push(`Skipping sample record for ${record.submittedByEmail} — already exists`);
+      log.push(`Skipping sample record for ${record.submittedByEmail}, already exists`);
       continue;
     }
 
@@ -99,9 +99,9 @@ export async function seedDemoData(payload: Payload): Promise<string[]> {
         dateOfBirth: record.dateOfBirth,
         diagnosisNotes: record.diagnosisNotes,
         // payload-types.ts is generated against whichever adapter is active
-        // when `pnpm generate:types` runs (SQLite locally → numeric IDs);
+        // when `pnpm generate:types` runs (SQLite locally, numeric IDs).
         // Mongo IDs are strings at runtime, so this cast just satisfies
-        // the generated type — Payload itself doesn't care at runtime.
+        // the generated type. Payload itself doesn't care at runtime.
         submittedBy: userIdByEmail.get(record.submittedByEmail) as number,
       },
       overrideAccess: true,

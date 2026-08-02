@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: "unauthorized_access.sh",
 };
 
-// Deliberately its own root layout, separate from the (portal) group — no
+// Deliberately its own root layout, separate from the (portal) group. No
 // shared header, no login chrome. This route simulates an attacker who
 // bypassed the app entirely (e.g. via the misconfigured cloud storage
 // bucket from the brief), not someone using the portal.

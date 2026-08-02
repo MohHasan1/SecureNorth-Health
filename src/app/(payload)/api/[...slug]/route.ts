@@ -1,4 +1,4 @@
-/* Payload's required REST API route — mirrors the official blank template. */
+/* Payload's required REST API route. Mirrors the official blank template. */
 import config from "@payload-config";
 import {
   REST_DELETE,

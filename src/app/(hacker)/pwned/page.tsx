@@ -36,7 +36,7 @@ export default function PwnedPage() {
       </p>
 
       <p className="max-w-md text-xs text-green-600">
-        (relax — this is a course demo. the only thing behind this door is AES-256-GCM
+        (relax, this is a course demo. the only thing behind this door is AES-256-GCM
         ciphertext, and there's no key back here.)
       </p>
 

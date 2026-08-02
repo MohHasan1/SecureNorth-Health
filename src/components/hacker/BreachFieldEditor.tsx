@@ -66,7 +66,7 @@ export function BreachFieldEditor({
             {status === "writing" ? "writing to db..." : "$ commit tampering"}
           </button>
           {status === "written" && !dirty ? (
-            <span className="text-green-500">✓ written — try reading it back through the app</span>
+            <span className="text-green-500">✓ written. Try reading it back through the app</span>
           ) : null}
         </div>
       </div>

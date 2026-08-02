@@ -43,7 +43,7 @@ export default async function EditRecordPage({
       <div className="mx-auto max-w-md">
         <h1 className="text-xl font-semibold">Record #{id}</h1>
         <p className="mt-3 text-sm text-danger">
-          This record couldn't be decrypted (likely tampered ciphertext) — nothing to edit.
+          This record couldn't be decrypted (likely tampered ciphertext). Nothing to edit.
         </p>
       </div>
     );
@@ -53,7 +53,7 @@ export default async function EditRecordPage({
     <div className="mx-auto max-w-md">
       <h1 className="text-xl font-semibold">Edit record #{id}</h1>
       <p className="mt-1 text-sm text-muted">
-        Saving re-encrypts every field fresh, with a new IV — same as any other write.
+        Saving re-encrypts every field fresh, with a new IV, same as any other write.
       </p>
       <div className="mt-6">
         <EditRecordForm
