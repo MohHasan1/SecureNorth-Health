@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
 
-import { LogoutButton } from "@/components/portal/LogoutButton";
+import { ProfileMenu } from "@/components/portal/ProfileMenu";
 import { getCurrentUser } from "@/lib/getCurrentUser";
 
 import "../globals.css";
@@ -61,12 +61,11 @@ export default async function PortalLayout({
                 <span aria-hidden>❓</span> Help
               </Link>
               {user ? (
-                <>
-                  <span className="text-muted">
-                    {user.name} · {ROLE_LABEL[user.role as string] ?? user.role}
-                  </span>
-                  <LogoutButton />
-                </>
+                <ProfileMenu
+                  name={user.name as string}
+                  email={user.email as string}
+                  roleLabel={ROLE_LABEL[user.role as string] ?? (user.role as string)}
+                />
               ) : null}
             </div>
           </div>
