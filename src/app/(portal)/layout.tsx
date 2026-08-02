@@ -35,21 +35,26 @@ export default async function PortalLayout({
               <Link href={user ? "/records" : "/login"} className="font-semibold tracking-tight">
                 SecureNorth Health <span className="text-muted font-normal">· Portal</span>
               </Link>
-              {user ? (
-                <nav className="flex items-center gap-4 text-sm text-muted">
-                  <Link href="/records" className="hover:text-foreground">
-                    Records
-                  </Link>
-                  <Link href="/intake" className="hover:text-foreground">
-                    New record
-                  </Link>
-                  {user.role === "admin" ? (
-                    <Link href="/admin-tools/seed" className="hover:text-foreground">
-                      Seed data
+              <nav className="flex items-center gap-4 text-sm text-muted">
+                <Link href="/help" className="hover:text-foreground">
+                  Help
+                </Link>
+                {user ? (
+                  <>
+                    <Link href="/records" className="hover:text-foreground">
+                      Records
                     </Link>
-                  ) : null}
-                </nav>
-              ) : null}
+                    <Link href="/intake" className="hover:text-foreground">
+                      New record
+                    </Link>
+                    {user.role === "admin" ? (
+                      <Link href="/admin-tools/seed" className="hover:text-foreground">
+                        Seed data
+                      </Link>
+                    ) : null}
+                  </>
+                ) : null}
+              </nav>
             </div>
             {user ? (
               <div className="flex items-center gap-3 text-sm">

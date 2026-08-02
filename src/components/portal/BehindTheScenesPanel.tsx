@@ -1,3 +1,6 @@
+import Link from "next/link";
+
+import { DeleteRecordButton } from "@/components/portal/DeleteRecordButton";
 import type { EncryptedField } from "@/lib/crypto/encryption";
 
 export type DecryptResult =
@@ -58,11 +61,22 @@ export function BehindTheScenesPanel({
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-xl font-semibold">Record #{recordId}</h1>
-        <p className="mt-1 text-sm text-muted">
-          What happened to this record after you hit submit.
-        </p>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-xl font-semibold">Record #{recordId}</h1>
+          <p className="mt-1 text-sm text-muted">
+            What happened to this record after you hit submit.
+          </p>
+        </div>
+        <div className="flex shrink-0 items-center gap-2">
+          <Link
+            href={`/records/${recordId}/edit`}
+            className="rounded-md border border-border bg-surface px-3 py-1.5 text-sm font-medium text-foreground hover:bg-bg"
+          >
+            Edit
+          </Link>
+          <DeleteRecordButton recordId={recordId} />
+        </div>
       </div>
 
       <section className="rounded-lg border border-border bg-surface p-5">

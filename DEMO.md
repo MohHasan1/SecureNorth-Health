@@ -10,10 +10,10 @@ detection.
 
 ```bash
 pnpm install
-cp .env.example .env
+cp .env.local.example .env.local
 ```
 
-Fill in `.env`:
+Fill in `.env.local`:
 
 ```bash
 node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"   # -> PATIENT_FIELD_ENCRYPTION_KEY

@@ -10,7 +10,7 @@
     "lint": "eslint",
     "generate:importmap": "payload generate:importmap",
     "generate:types": "payload generate:types",
-    "seed": "tsx --env-file=.env src/seed.ts",
+    "seed": "tsx --env-file=.env.local src/seed.ts",
     "seed:prod": "NODE_ENV=production tsx --env-file=.env.production src/seed.ts"
   },
   "dependencies": {

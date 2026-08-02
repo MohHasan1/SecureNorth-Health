@@ -91,8 +91,7 @@ export const PatientRecords: CollectionConfig = {
       // decrypt authorization is separate, see decryptForAuthorizedRoles).
       return { submittedBy: { equals: user.id } };
     },
-    // Records are append-only from the portal. Only an admin may edit one,
-    // and in practice the only edit we perform is the tamper-demo action.
+    // Only an admin may edit or delete a record from the normal portal.
     update: ({ req: { user } }) => user?.role === "admin",
     delete: ({ req: { user } }) => user?.role === "admin",
   },
@@ -117,13 +116,23 @@ export const PatientRecords: CollectionConfig = {
         return data;
       },
     ],
+    // deleteByID formats its response by running this same collection's
+    // afterRead hooks on the doc it just deleted — without this flag, the
+    // audit-log hook below would try to insert a log row pointing at a
+    // record ID that no longer exists in the DB, failing the delete with
+    // a foreign-key error even though the delete itself already succeeded.
+    beforeDelete: [
+      ({ context }) => {
+        context.isDeleting = true;
+      },
+    ],
     afterRead: [
       async ({ doc, req, context }) => {
         // One audit-log entry per document read, not per field.
         // overrideAccess: this write is system-triggered by the read
         // itself, not a user action, so it shouldn't be gated by the
         // reading user's own collection permissions.
-        if (!context?.raw && req.user) {
+        if (!context?.raw && !context?.isDeleting && req.user) {
           await req.payload.create({
             collection: "access-logs",
             data: {
