@@ -10,9 +10,11 @@
     "lint": "eslint",
     "generate:importmap": "payload generate:importmap",
     "generate:types": "payload generate:types",
-    "seed": "tsx --env-file=.env src/seed.ts"
+    "seed": "tsx --env-file=.env src/seed.ts",
+    "seed:prod": "NODE_ENV=production tsx --env-file=.env.production src/seed.ts"
   },
   "dependencies": {
+    "@payloadcms/db-mongodb": "^3.87.0",
     "@payloadcms/db-sqlite": "^3.87.0",
     "@payloadcms/next": "^3.87.0",
     "@payloadcms/richtext-lexical": "^3.87.0",

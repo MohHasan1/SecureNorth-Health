@@ -22,10 +22,33 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"      # 
 
 ```bash
 pnpm dev     # http://localhost:3000 — also creates db.sqlite and pushes the schema
-pnpm seed    # creates the 4 demo accounts below
+pnpm seed    # creates the 4 demo accounts + 2 sample patient records below
 ```
 
 To reset to a clean slate before a take: `rm db.sqlite && pnpm seed`.
+
+## Database: SQLite locally, MongoDB in production
+
+`src/payload.config.ts` picks the adapter based on `NODE_ENV` — nothing to
+configure by hand:
+
+- **Dev** (`NODE_ENV` unset, i.e. `pnpm dev`): SQLite, `db.sqlite`, zero setup.
+- **Production** (`NODE_ENV=production`, i.e. `pnpm build && pnpm start`):
+  MongoDB, using `DATABASE_URI` from `.env.production` (copy
+  `.env.production.example` and fill in a real connection string, e.g. a
+  free MongoDB Atlas cluster).
+
+To seed a production/Mongo database the same way as local dev:
+
+```bash
+cp .env.production.example .env.production   # fill in DATABASE_URI, PAYLOAD_SECRET, PATIENT_FIELD_ENCRYPTION_KEY
+pnpm seed:prod
+```
+
+`seed.ts` is the same script either way — it just goes through Payload's
+Local API, which already points at whichever database `payload.config.ts`
+picked. Both the accounts and the sample records are safe to re-run: it
+checks for an existing match before creating anything.
 
 ## Demo accounts
 
@@ -35,6 +58,11 @@ To reset to a clean slate before a take: `rm db.sqlite && pnpm seed`.
 | Nurse 2  | nurse2@securenorth.health        | nurse2-demo-pass     | Only records *she* submitted (not Nurse's) |
 | Provider | provider@securenorth.health     | provider-demo-pass   | Any record — a doctor needs full patient context |
 | Admin    | admin@securenorth.health        | admin-demo-pass      | Any record, plus the tamper-demo button |
+
+Note: `pnpm seed` also creates 2 sample patient records so `/records` isn't
+empty while you're just poking around — for the actual recording, submit a
+fresh one live as described below rather than pointing at the seeded data,
+it's a better demo.
 
 ## Recording script
 

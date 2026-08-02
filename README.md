@@ -6,8 +6,9 @@ and exposes what happens behind the scenes: encryption in transit,
 AES-256-GCM encryption at rest, role-gated decryption, and live tamper
 detection.
 
-**Stack:** Next.js 16 (App Router) + Payload CMS 3 + SQLite, TypeScript,
-Tailwind CSS.
+**Stack:** Next.js 16 (App Router) + Payload CMS 3, TypeScript, Tailwind
+CSS. SQLite in development, MongoDB in production — picked automatically
+by `NODE_ENV`, see `src/payload.config.ts`.
 
 See [DEMO.md](./DEMO.md) for setup, demo accounts, and the recording
 script.
@@ -26,6 +27,7 @@ src/
   lib/
     crypto/encryption.ts  AES-256-GCM encrypt/decrypt
     actions/               server action for the tamper demo
-  payload.config.ts
-  seed.ts                 creates the 4 demo accounts
+  payload.config.ts        picks SQLite (dev) or MongoDB (prod) by NODE_ENV
+  seed.ts                  creates the 4 demo accounts + sample records — run with
+                            `pnpm seed` (dev) or `pnpm seed:prod` (production/Mongo)
 ```
