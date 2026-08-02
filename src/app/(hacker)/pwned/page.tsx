@@ -37,7 +37,8 @@ export default function PwnedPage() {
 
       <p className="max-w-md text-xs text-green-600">
         (relax, this is a course demo. the only thing behind this door is AES-256-GCM
-        ciphertext, and there's no key back here.)
+        ciphertext, and there's no key back here. patient names are shown struck-through next to
+        each record, for demo tracking only. a real attacker would not see them.)
       </p>
 
       <Link

@@ -2,9 +2,21 @@ import config from "@payload-config";
 import { getPayload } from "payload";
 
 import { BreachFieldEditor } from "@/components/hacker/BreachFieldEditor";
-import type { EncryptedField } from "@/lib/crypto/encryption";
+import { decryptField, type EncryptedField } from "@/lib/crypto/encryption";
 
 const PHI_FIELDS = ["patientName", "dateOfBirth", "diagnosisNotes"] as const;
+
+// Demo-only label so whoever's recording can tell which record is which
+// while editing ciphertext below. A real attacker doesn't have the key,
+// so this line is the one thing on this page that isn't a faithful
+// simulation of what they'd actually see.
+function demoTrackingName(raw: EncryptedField): string {
+  try {
+    return decryptField(raw);
+  } catch {
+    return "(corrupted)";
+  }
+}
 
 // This page reads live from the DB but never touches cookies/headers (it's
 // intentionally unauthenticated), so Next.js has no signal to treat it as
@@ -47,7 +59,15 @@ root@attacker:~# sqlite3 loot/db.sqlite "SELECT * FROM patient_records;"
       <div className="mt-4 space-y-4">
         {docs.map((doc) => (
           <div key={doc.id} className="rounded border border-green-500/30 p-3">
-            <div className="text-green-500">record_id = {doc.id}</div>
+            <div className="text-green-500">
+              record_id = {doc.id}{" "}
+              <span className="text-green-700">
+                <span className="line-through decoration-2">
+                  {demoTrackingName(doc.patientName as unknown as EncryptedField)}
+                </span>{" "}
+                (demo tracking only, a real attacker would not see this)
+              </span>
+            </div>
             {PHI_FIELDS.map((field) => (
               <BreachFieldEditor
                 key={`${doc.id}-${field}-${(doc[field] as unknown as EncryptedField).ciphertext}`}
