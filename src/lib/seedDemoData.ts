@@ -1,5 +1,7 @@
 import type { Payload } from "payload";
 
+import type { PatientRecord } from "@/payload-types";
+
 const DEMO_USERS = [
   {
     email: "nurse@securenorth.health",
@@ -98,11 +100,7 @@ export async function seedDemoData(payload: Payload): Promise<string[]> {
         patientName: record.patientName,
         dateOfBirth: record.dateOfBirth,
         diagnosisNotes: record.diagnosisNotes,
-        // payload-types.ts is generated against whichever adapter is active
-        // when `pnpm generate:types` runs (SQLite locally, numeric IDs).
-        // Mongo IDs are strings at runtime, so this cast just satisfies
-        // the generated type. Payload itself doesn't care at runtime.
-        submittedBy: userIdByEmail.get(record.submittedByEmail) as number,
+        submittedBy: userIdByEmail.get(record.submittedByEmail) as PatientRecord["submittedBy"],
       },
       overrideAccess: true,
     });
